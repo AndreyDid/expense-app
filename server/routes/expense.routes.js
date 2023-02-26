@@ -6,11 +6,9 @@ const router = express.Router({ mergeParams: true });
 
 router
   .route("/")
-  // get получает expense и отфильтровывает по userId
   .get(auth, async (req, res) => {
     try {
       const { orderBy, equalTo } = req.query;
-      // [orderBy] - какое св-во фильтруем например дата // equalTo - то что передаем с фронта
       const list = await Expense.find({ [orderBy]: equalTo });
       res.send(list);
     } catch (error) {
@@ -19,7 +17,6 @@ router
       });
     }
   })
-  // post создает новый expense и возвращает
   .post(auth, async (req, res) => {
     try {
       const newExpense = await Expense.create({
@@ -60,12 +57,10 @@ router.delete("/:expenseId", auth, async (req, res) => {
   try {
     const { expenseId } = req.params;
     const removeExpense = await Expense.findById(expenseId);
-    // проверка можемли мы удалить, потому что удалить может только тот кто создал
     if (removeExpense.userId.toString() === req.user._id) {
       await removeExpense.remove();
       return res.send(null);
     } else {
-      // иначе если id не совпадают
       res.status(401).json({ message: "Unauthorized" });
     }
   } catch (error) {

@@ -6,11 +6,9 @@ const router = express.Router({ mergeParams: true });
 
 router
   .route("/")
-  // get получает incomes и отфильтровывает по userId
   .get(auth, async (req, res) => {
     try {
       const { orderBy, equalTo } = req.query;
-      // [orderBy] - какое св-во фильтруем например дата // equalTo - то что передаем с фронта
       const list = await Income.find({ [orderBy]: equalTo });
       res.send(list);
     } catch (error) {
@@ -19,7 +17,6 @@ router
       });
     }
   })
-  // post создает новый incomes и возвращает
   .post(auth, async (req, res) => {
     try {
       const newIncome = await Income.create({
@@ -56,17 +53,14 @@ router.patch("/:accountId", auth, async (req, res) => {
   }
 });
 
-//Удаление
 router.delete("/:incomeId", auth, async (req, res) => {
   try {
     const { incomeId } = req.params;
     const removeIncome = await Income.findById(incomeId);
-    // проверка можемли мы удалить, потому что удалить может только тот кто создал
     if (removeIncome.userId.toString() === req.user._id) {
       await removeIncome.remove();
       return res.send(null);
     } else {
-      // иначе если id не совпадают
       res.status(401).json({ message: "Unauthorized" });
     }
   } catch (error) {

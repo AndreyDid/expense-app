@@ -6,7 +6,8 @@ import { createExpenses } from "../../../store/expenses";
 import Button from "../../common/button";
 import { useHistory } from "react-router-dom";
 import {
-    getCategoryExpenses, getCategoryExpensesLoadingStatus,
+    getCategoryExpenses,
+    getCategoryExpensesLoadingStatus,
     loadCategoryExpensesList
 } from "../../../store/categoryExpense";
 import {

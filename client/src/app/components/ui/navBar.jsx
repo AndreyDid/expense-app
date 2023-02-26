@@ -33,11 +33,7 @@ const NavBar = () => {
                         </ul>
                     )}
                 </div>
-                <div>
-                    {isLoggedIn && (
-                        <NavProfile/>
-                    )}
-                </div>
+                <div>{isLoggedIn && <NavProfile />}</div>
             </div>
         </div>
     );

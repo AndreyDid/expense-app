@@ -22,8 +22,6 @@ router.patch("/:userId", auth, async (req, res) => {
   }
 });
 
-// Получение списка всех пользователей если Юзер в системе
-
 router.get("/", auth, async (req, res) => {
   try {
     const list = await User.find();

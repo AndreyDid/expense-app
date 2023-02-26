@@ -7,7 +7,8 @@ import {
 } from "../store/categoryExpense";
 import {
     getCategoryAccountById,
-    getCategoryAccountLoadingStatus, loadCategoryAccountList
+    getCategoryAccountLoadingStatus,
+    loadCategoryAccountList
 } from "../store/categoryAccount";
 import { getCurrentUserId } from "../store/user";
 
