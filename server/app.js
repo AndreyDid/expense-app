@@ -32,7 +32,7 @@ async function start() {
     mongoose.connection.once("open", () => {
       initDatabase();
     });
-    //
+
     await mongoose.connect(config.get("mongoUri"));
     console.log(chalk.green(`MongoDB connected.`));
 
