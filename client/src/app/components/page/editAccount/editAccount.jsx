@@ -1,37 +1,36 @@
 import React, { useEffect, useState } from "react";
-import TextField from "../../inputs/textField";
-import Button from "../../common/button";
+import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useHistory, useParams } from "react-router-dom";
+import { removeExpense } from "../../../store/expenses";
+import { removeIncome } from "../../../store/incomes";
 import {
     getAccountById,
     getAccountLoadingStatus,
     removeAccount,
     updateAccount
 } from "../../../store/accounts";
+import TextField from "../../inputs/textField";
+import Button from "../../common/button";
 import useForm from "../../../hooks/useForm";
-import { getExpenses, removeExpense } from "../../../store/expenses";
-import { getIncomes, removeIncome } from "../../../store/incomes";
+import useOperation from "../../../hooks/useOperation";
+import Loader from "../../common/loader";
 
 const EditAccount = () => {
+    const { incomes, expenses, params } = useOperation();
+
     const history = useHistory();
-    const params = useParams();
     const { accountId } = params;
-    const [data, setData] = useState();
-    const [isLoading, setIsLoading] = useState(true);
 
     const currentAccount = useSelector(getAccountById(accountId));
     const accountLoading = useSelector(getAccountLoadingStatus());
 
-    const incomes = useSelector(getIncomes());
-    const expenses = useSelector(getExpenses());
-
+    const [data, setData] = useState();
+    const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
-        if (data && isLoading && currentAccount && !accountLoading) {
+        if (isLoading && currentAccount && !accountLoading) {
             setIsLoading(false);
         }
     }, [data]);
-
     const validatorConfig = {
         account: {
             isRequired: {
@@ -74,27 +73,26 @@ const EditAccount = () => {
         if (incomes.length > 0 && expenses.length > 0) {
             const findIncome = incomes.filter((i) => i.account === id);
             const findExpense = expenses.filter((i) => i.account === id);
-            for (const id of findIncome) {
-                dispatch(removeIncome(id._id));
+            for (const item of findIncome) {
+                dispatch(removeIncome(item._id));
             }
-            for (const id of findExpense) {
-                dispatch(removeExpense(id._id));
+            for (const item of findExpense) {
+                dispatch(removeExpense(item._id));
             }
         } else if (incomes.length > 0) {
             const findIncome = incomes.filter((i) => i.account === id);
-            for (const id of findIncome) {
-                dispatch(removeIncome(id._id));
+            for (const item of findIncome) {
+                dispatch(removeIncome(item._id));
             }
         } else {
             const findExpense = expenses.filter((i) => i.account === id);
-            for (const id of findExpense) {
-                dispatch(removeExpense(id._id));
+            for (const item of findExpense) {
+                dispatch(removeExpense(item._id));
             }
         }
         dispatch(removeAccount(id));
         history.goBack();
     };
-
     return (
         <div className="container mt-5">
             <div className="row">
@@ -154,7 +152,7 @@ const EditAccount = () => {
                             </div>
                         </form>
                     ) : (
-                        "Loading..."
+                        <Loader />
                     )}
                 </div>
             </div>

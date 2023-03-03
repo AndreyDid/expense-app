@@ -22,10 +22,10 @@ const useForm = (validatorConfig, data, setData) => {
     };
     return {
         handleChange,
-        isValid,
         validate,
-        errors,
         useEffect,
+        isValid,
+        errors,
         data,
         dispatch
     };

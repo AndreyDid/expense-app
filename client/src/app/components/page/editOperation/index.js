@@ -1,2 +1,2 @@
-import EditOperation from "./EditOperation";
+import EditOperation from "./editOperation";
 export default EditOperation;

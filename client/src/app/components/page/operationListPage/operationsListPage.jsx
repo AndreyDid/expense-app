@@ -1,57 +1,31 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { paginate } from "../../../utils/paginate";
-import Pagination from "../../common/pagination";
-import GroupList from "../../common/groupList";
-import _ from "lodash";
-import { useDispatch, useSelector } from "react-redux";
-import {
-    getIncomes,
-    loadIncomesList,
-    removeIncome
-} from "../../../store/incomes";
-import {
-    getExpenses,
-    loadExpensesList,
-    removeExpense
-} from "../../../store/expenses";
-import { getCurrentUserId } from "../../../store/user";
+import { removeIncome } from "../../../store/incomes";
+import { removeExpense } from "../../../store/expenses";
 import { displayDate } from "../../../utils/displayDate";
-import Button from "../../common/button";
-import Account from "../../account";
-import Category from "../../category";
-import {
-    getAccount,
-    loadAccountList,
-    updateAccount
-} from "../../../store/accounts";
+import { updateAccount } from "../../../store/accounts";
+import { getCategoryAccount } from "../../../store/categoryAccount";
+import { getCategoryExpenses } from "../../../store/categoryExpense";
 import {
     mathDeleteExpense,
     mathDeleteIncome
 } from "../../../utils/mathOperations";
+import Pagination from "../../common/pagination";
+import GroupList from "../../common/groupList";
+import _ from "lodash";
+import Button from "../../common/button";
+import Account from "../../account";
+import Category from "../../category";
+import useOperation from "../../../hooks/useOperation";
 import history from "../../../utils/history";
-import { getCategoryAccount } from "../../../store/categoryAccount";
-import { getCategoryExpenses } from "../../../store/categoryExpense";
+import Loader from "../../common/loader";
 
 const OperationsListPage = () => {
-    const userId = useSelector(getCurrentUserId());
-    const dispatch = useDispatch();
-    const incomes = useSelector(getIncomes());
-    const expenses = useSelector(getExpenses());
-    const acc = useSelector(getAccount());
-    const catAcc = useSelector(getCategoryAccount());
-    const catExp = useSelector(getCategoryExpenses());
+    const { incomes, expenses, account, dispatch } = useOperation();
 
-    const accountList = useSelector(getAccount(userId));
-    useEffect(() => {
-        dispatch(loadAccountList(userId));
-    }, [userId]);
-
-    useEffect(() => {
-        dispatch(loadIncomesList(userId));
-    }, [userId]);
-    useEffect(() => {
-        dispatch(loadExpensesList(userId));
-    }, [userId]);
+    const catAccount = useSelector(getCategoryAccount());
+    const catExpense = useSelector(getCategoryExpenses());
 
     let allOperations = [];
     if (incomes && expenses) {
@@ -59,8 +33,8 @@ const OperationsListPage = () => {
     }
 
     let allCategory = [];
-    if (catAcc && catExp) {
-        allCategory = [...catAcc, ...catExp];
+    if (catAccount && catExpense) {
+        allCategory = [...catAccount, ...catExpense];
     }
     const allCatList = allCategory.map((c) => ({
         account: c.name,
@@ -85,7 +59,7 @@ const OperationsListPage = () => {
 
     const handleDelete = (id, type, idAccount) => {
         allOperations.filter((i) => i._id !== id);
-        const findAccount = accountList.filter((a) => a._id === idAccount);
+        const findAccount = account.filter((a) => a._id === idAccount);
         const findOperation = allOperations.filter((a) => a._id === id);
         if (type === "income") {
             dispatch(
@@ -143,11 +117,11 @@ const OperationsListPage = () => {
                         <h2 className="text-black-50 m-0 me-1">Фильтр:</h2>
                         <div className="container p-0 fluid d-flex justify-content-between">
                             <div className="d-flex">
-                                {acc && (
+                                {account && (
                                     <GroupList
                                         label="Счет"
                                         selectedItem={selectedAcc}
-                                        items={acc}
+                                        items={account}
                                         onItemSelect={handleAccountSelect}
                                     />
                                 )}
@@ -282,7 +256,7 @@ const OperationsListPage = () => {
             </>
         );
     }
-    return "Loading";
+    return <Loader/>;
 };
 
 export default OperationsListPage;

@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import Login from "../../../layouts/login";
 import { loadCategoryExpensesList } from "../../../store/categoryExpense";
+import Loader from "../../common/loader";
 
 const AppLoader = ({ children }) => {
     const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const AppLoader = ({ children }) => {
         }
     }, [isLoggedIn]);
     if (!isLoggedIn) return <Login />;
-    if (usersStatusLoading) return "Loading";
+    if (usersStatusLoading) return <Loader/>;
     return children;
 };
 AppLoader.propTypes = {

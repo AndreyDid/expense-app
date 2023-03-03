@@ -1,23 +1,16 @@
 import React, { useEffect, useState } from "react";
-import TextField from "../../inputs/textField";
-import Button from "../../common/button";
+import { getCategoryExpenses } from "../../../store/categoryExpense";
 import { useSelector } from "react-redux";
-import { getCurrentUserId } from "../../../store/user";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { updateIncomes } from "../../../store/incomes";
 import {
-    getExpenses,
     getExpensesLoadingStatus,
     updateExpense
 } from "../../../store/expenses";
 import {
-    getAccount,
     getAccountLoadingStatus,
-    loadAccountList,
     updateAccount
 } from "../../../store/accounts";
-import SelectField from "../../inputs/selectField";
-import { getCategoryExpenses } from "../../../store/categoryExpense";
-import { getIncomes, updateIncomes } from "../../../store/incomes";
 import {
     getCategoryAccount,
     getCategoryAccountLoadingStatus
@@ -26,48 +19,42 @@ import {
     mathUpdateExpense,
     mathUpdateIncome
 } from "../../../utils/mathOperations";
+import TextField from "../../inputs/textField";
+import Button from "../../common/button";
+import SelectField from "../../inputs/selectField";
 import useForm from "../../../hooks/useForm";
+import useOperation from "../../../hooks/useOperation";
+import Loader from "../../common/loader";
 
 const EditOperation = () => {
-    const userId = useSelector(getCurrentUserId());
-    const history = useHistory();
-    const params = useParams();
-    const { operationsId } = params;
+    const { expenses, incomes, account, params } = useOperation();
+
     const [data, setData] = useState();
+
+    const history = useHistory();
+    const { operationsId } = params;
+
     const [isLoading, setIsLoading] = useState(true);
-
     useEffect(() => {
-        dispatch(loadAccountList(userId));
-    }, [userId]);
+        if (data && isLoading) {
+            setIsLoading(false);
+        }
+    }, [data]);
 
-    const AllExpenses = useSelector(getExpenses());
-    const AllIncomes = useSelector(getIncomes());
     let allOperations = [];
-    if (AllIncomes && AllExpenses) {
-        allOperations = [...AllIncomes, ...AllExpenses];
+    if (incomes && expenses) {
+        allOperations = [...incomes, ...expenses];
     }
     const currentOperation = allOperations.find((i) => i._id === operationsId);
 
     const categoryExpenses = useSelector(getCategoryExpenses());
     const categoryExpensesLoading = useSelector(getExpensesLoadingStatus());
-    const categoryExpensesList = categoryExpenses.map((c) => ({
-        label: c.name,
-        value: c._id
-    }));
-
-    const account = useSelector(getAccount(userId));
     const accountLoading = useSelector(getAccountLoadingStatus());
 
     const categoryAccount = useSelector(getCategoryAccount());
     const categoryAccountLoading = useSelector(
         getCategoryAccountLoadingStatus()
     );
-
-    useEffect(() => {
-        if (data && isLoading) {
-            setIsLoading(false);
-        }
-    }, [data]);
 
     const validatorConfig = {
         account: {
@@ -142,11 +129,15 @@ const EditOperation = () => {
             label: a.name,
             value: a._id
         }));
+        const categoryExpensesList = categoryExpenses.map((c) => ({
+            label: c.name,
+            value: c._id
+        }));
 
         return (
             <div className="container mt-5">
                 <div className="row">
-                    <div className="col-md-6 offset-md-3 shadow p-4">
+                    <div className="col-md-6 offset-md-3 shadow bg-light p-4 rounded-1">
                         {!isLoading && allOperations.length > 0 ? (
                             <form onSubmit={handleSubmit}>
                                 <SelectField
@@ -206,7 +197,7 @@ const EditOperation = () => {
                                 </div>
                             </form>
                         ) : (
-                            "Loading..."
+                            <Loader/>
                         )}
                     </div>
                 </div>

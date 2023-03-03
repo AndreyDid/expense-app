@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import LogOut from "./layouts/logOut";
 import CreateIncome from "./components/page/createIncome";
 import CreateExpenses from "./components/page/createExpenses";
-import EditUser from "./components/page/editPage";
+import EditUserPage from "./components/page/editUserPage";
 import editOperation from "./components/page/editOperation/editOperation";
 import ProtectedRoute from "./components/common/protectedRoute";
 import User from "./layouts/user";
@@ -21,15 +21,15 @@ function App() {
     return (
         <>
             <AppLoader>
-                <NavBar />
+                <NavBar/>
                 <div className="container">
                     <Switch>
-                        <Route path="/login/:type?" component={Login} />
-                        <Route path="/logout" component={LogOut} />
-                        <Route
-                            path="/user/historyOperations/:operationsId?/edit"
-                            component={editOperation}
-                        />
+                        <Route path="/login/:type?" component={Login}/>
+                        <Route path="/logout" component={LogOut}/>
+                            <Route
+                                path="/user/historyOperations/:operationsId?/edit"
+                                component={editOperation}
+                            />
                         <UserLoader>
                             <ProtectedRoute>
                                 <Route
@@ -54,15 +54,15 @@ function App() {
                                 />
                                 <Route
                                     path="/user/:userId?/edit"
-                                    component={EditUser}
+                                    component={EditUserPage}
                                 />
-                                <Route path="/" exact component={User} />
+                                <Route path="/" exact component={User}/>
                             </ProtectedRoute>
                         </UserLoader>
                     </Switch>
                 </div>
             </AppLoader>
-            <ToastContainer />
+            <ToastContainer/>
         </>
     );
 }

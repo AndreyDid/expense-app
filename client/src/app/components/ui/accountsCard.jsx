@@ -1,34 +1,18 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getCurrentUserId } from "../../store/user";
-import { getIncomesLoadingStatus } from "../../store/incomes";
+import React from "react";
 import CardOperation from "../common/cardOperation";
-import history from "../../utils/history";
-
-import {
-    getAccount,
-    getAccountLoadingStatus,
-    loadAccountList
-} from "../../store/accounts";
+import Loader from "../common/loader";
+import useOperation from "../../hooks/useOperation";
+import { useSelector } from "react-redux";
+import { getIncomesLoadingStatus } from "../../store/incomes";
+import { getAccountLoadingStatus } from "../../store/accounts";
 
 const AccountsCard = () => {
-    const userId = useSelector(getCurrentUserId());
-    const account = useSelector(getAccount(userId));
-    const dispatch = useDispatch();
+    const { account, handleClick, userId } = useOperation();
 
-    useEffect(() => {
-        dispatch(loadAccountList(userId));
-    }, [userId]);
+    const isLoadingIncome = useSelector(getIncomesLoadingStatus());
+    const isLoadingAccount = useSelector(getAccountLoadingStatus());
 
-    const isLoading = useSelector(getIncomesLoadingStatus());
-
-    const isLoadingAcc = useSelector(getAccountLoadingStatus());
-
-    const handleClick = (accountId) => {
-        history.push(`/user/account/${accountId}/edit`);
-    };
-
-    if (!isLoading && !isLoadingAcc) {
+    if (!isLoadingIncome && !isLoadingAccount) {
         const allAccounts = account.map((b) => b.sum);
         const sumOfBalance = allAccounts.reduce((acc, curr) => {
             return acc + Number(curr);
@@ -46,7 +30,7 @@ const AccountsCard = () => {
                 handleClick={handleClick}
             />
         );
-    } else return "Loading...";
+    } else return <Loader />;
 };
 
 export default AccountsCard;

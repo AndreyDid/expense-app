@@ -1,21 +1,13 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getCurrentUserId } from "../../store/user";
-import {
-    getIncomes,
-    getIncomesLoadingStatus,
-    loadIncomesList
-} from "../../store/incomes";
-import CardOperation from "../common/cardOperation";
+import React from "react";
+import { useSelector } from "react-redux";
 import { orderBy } from "lodash";
+import { getIncomesLoadingStatus } from "../../store/incomes";
+import CardOperation from "../common/cardOperation";
+import Loader from "../common/loader";
+import useOperation from "../../hooks/useOperation";
 
 const IncomesCard = () => {
-    const userId = useSelector(getCurrentUserId());
-    const incomes = useSelector(getIncomes());
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(loadIncomesList(userId));
-    }, [userId]);
+    const { incomes, userId } = useOperation();
 
     const isLoading = useSelector(getIncomesLoadingStatus());
 
@@ -36,7 +28,7 @@ const IncomesCard = () => {
                 link="createIncome"
             />
         );
-    } else return "Loading...";
+    } else return <Loader/>;
 };
 
 export default IncomesCard;
