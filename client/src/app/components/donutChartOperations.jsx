@@ -63,7 +63,7 @@ const DonutChartOperations = ({
     return (
         <>
             <div>
-                {showExpense && colorIncome && colorExpense ? (
+                {showExpense ? (
                     <DonutChart
                         data={chartData}
                         options={chartOptionsIncomes}

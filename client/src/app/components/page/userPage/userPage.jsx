@@ -141,7 +141,7 @@ const UserPage = () => {
                     <ExpensesCard expenses={expenses} userId={userId} />
                 </div>
             </div>
-            {chartData && chartDataExp ? (
+            {chartData && chartDataExp && Object.keys(colorIncome).length > 0 && Object.keys(colorExpense).length > 0 ? (
                 <div className="mt-4 position-relative">
                     <Button
                         label={showExpense ? "Расход" : "Доход"}
