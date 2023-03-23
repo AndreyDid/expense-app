@@ -1,7 +1,6 @@
 const express = require("express");
 const auth = require("../middleware/auth.middleware");
 const Income = require("../models/Income");
-const Expense = require("../models/Expense");
 const router = express.Router({ mergeParams: true });
 
 router

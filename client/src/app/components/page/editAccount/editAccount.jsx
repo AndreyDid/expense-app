@@ -9,11 +9,13 @@ import {
     removeAccount,
     updateAccount
 } from "../../../store/accounts";
-import TextField from "../../inputs/textField";
+import TextField from "../../form/textField";
 import Button from "../../common/button";
 import useForm from "../../../hooks/useForm";
 import useOperation from "../../../hooks/useOperation";
 import Loader from "../../common/loader";
+import ContainerFormWrapper from "../../common/containerForm";
+import TextAreaField from "../../form/TextAreaField";
 
 const EditAccount = () => {
     const { incomes, expenses, params } = useOperation();
@@ -57,7 +59,7 @@ const EditAccount = () => {
 
     useEffect(() => {
         if (currentAccount && !data && !accountLoading) {
-            setData((prevState) => ({ ...currentAccount }));
+            setData({ ...currentAccount });
         }
     }, [currentAccount, data, accountLoading]);
 
@@ -94,69 +96,65 @@ const EditAccount = () => {
         history.goBack();
     };
     return (
-        <div className="container mt-5">
-            <div className="row">
-                <div className="col-md-6 offset-md-3 shadow p-4">
-                    {!isLoading && !currentAccount.length > 0 ? (
-                        <form onSubmit={handleSubmit}>
-                            <div className="d-flex justify-content-end">
-                                <Button
-                                    type="button"
-                                    color="danger"
-                                    size="btn-sm"
-                                    onClick={() =>
-                                        handleDelete(currentAccount._id)
-                                    }
-                                    icon={<i className="bi bi-trash-fill"></i>}
-                                    rounded="rounded-1"
-                                />
-                            </div>
-                            <TextField
-                                label="Название"
-                                name="account"
-                                type="text"
-                                value={data.account}
-                                error={errors.account}
-                                onChange={handleChange}
+        <ContainerFormWrapper>
+            <div>
+                {!isLoading && !currentAccount.length > 0 ? (
+                    <form onSubmit={handleSubmit}>
+                        <div className="d-flex justify-content-end">
+                            <Button
+                                type="button"
+                                color="danger"
+                                size="btn-sm"
+                                onClick={() => handleDelete(currentAccount._id)}
+                                icon={<i className="bi bi-trash-fill"></i>}
+                                rounded="rounded-1"
                             />
-                            <TextField
-                                label="Сумма"
-                                name="sum"
-                                type="number"
-                                value={data.sum}
-                                error={errors.sum}
-                                onChange={handleChange}
+                        </div>
+                        <TextField
+                            label="Название"
+                            name="account"
+                            type="text"
+                            value={data.account}
+                            error={errors.account}
+                            onChange={handleChange}
+                        />
+                        <TextField
+                            label="Сумма"
+                            name="sum"
+                            type="number"
+                            value={data.sum}
+                            error={errors.sum}
+                            onChange={handleChange}
+                        />
+                        <TextAreaField
+                            label="Комментарий"
+                            name="comment"
+                            type="text"
+                            value={data.comment || ""}
+                            onChange={handleChange}
+                        />
+                        <div className="d-flex justify-content-between">
+                            <Button
+                                type="submit"
+                                disabled={!isValid}
+                                color="light"
+                                icon={<i className="bi bi-check-lg"></i>}
+                                rounded="rounded-1"
                             />
-                            <TextField
-                                label="Комментарий"
-                                name="comment"
-                                type="text"
-                                value={data.comment}
-                                onChange={handleChange}
+                            <Button
+                                type="button"
+                                color="light"
+                                onClick={() => history.goBack()}
+                                icon={<i className="bi bi-x-lg"></i>}
+                                rounded="rounded-1"
                             />
-                            <div className="d-flex justify-content-between">
-                                <Button
-                                    type="submit"
-                                    disabled={!isValid}
-                                    color="light"
-                                    icon={<i className="bi bi-check-lg"></i>}
-                                    rounded="rounded-1"
-                                />
-                                <Button
-                                    type="button"
-                                    color="light"
-                                    onClick={() => history.goBack()}
-                                    icon={<i className="bi bi-x-lg"></i>}
-                                    rounded="rounded-1"
-                                />
-                            </div>
-                        </form>
-                    ) : (
-                        <Loader />
-                    )}
-                </div>
+                        </div>
+                    </form>
+                ) : (
+                    <Loader />
+                )}
             </div>
-        </div>
+        </ContainerFormWrapper>
     );
 };
 

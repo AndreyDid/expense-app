@@ -4,15 +4,12 @@ import { useSelector } from "react-redux";
 import { getExpensesLoadingStatus } from "../../store/expenses";
 import CardOperation from "../common/cardOperation";
 import Loader from "../common/loader";
-import useOperation from "../../hooks/useOperation";
+import PropTypes from "prop-types";
 
-const ExpensesCard = () => {
-    const { expenses, userId } = useOperation();
-
+const ExpensesCard = ({ expenses, userId }) => {
     const isLoading = useSelector(getExpensesLoadingStatus());
     const sortedExpenses = orderBy(expenses, ["created_at"], ["desc"]);
-
-    if (!isLoading) {
+    if (!isLoading && expenses) {
         const allExpenses = expenses.map((b) => b.sum);
         const sumOfExpenses = allExpenses.reduce((acc, curr) => {
             return acc + curr;
@@ -28,7 +25,11 @@ const ExpensesCard = () => {
                 link="createExpenses"
             />
         );
-    } else return <Loader/>;
+    } else return <Loader />;
+};
+ExpensesCard.propTypes = {
+    expenses: PropTypes.array,
+    userId: PropTypes.string
 };
 
-export default ExpensesCard;
+export default React.memo(ExpensesCard);

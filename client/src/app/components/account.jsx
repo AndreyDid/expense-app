@@ -14,4 +14,4 @@ Account.propTypes = {
     id: PropTypes.string
 };
 
-export default Account;
+export default React.memo(Account);

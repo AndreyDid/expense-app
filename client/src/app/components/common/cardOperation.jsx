@@ -38,18 +38,27 @@ const CardOperation = ({
                                     <Account id={i.account} />
                                 )}
                                 {i.type === "account" && (
-                                    <p className="small m-0 text-secondary">
+                                    <p className="small m-0 text-secondary fst-italic">
                                         {i.comment}
                                     </p>
                                 )}
                                 {i.type === "income" && (
-                                    <Category id={i.category} type={i.type} />
+                                    <div className="small text-secondary">
+                                        <Category
+                                            id={i.category}
+                                            type={i.type}
+                                        />
+                                    </div>
                                 )}
                                 {i.type === "expense" && (
-                                    <Category id={i.category} type={i.type} />
+                                    <div className="small text-secondary">
+                                        <Category
+                                            id={i.category}
+                                            type={i.type}
+                                        />
+                                    </div>
                                 )}
                             </div>
-
                             <div>
                                 {i.type === "account" && (
                                     <div className="d-flex justify-content-end">

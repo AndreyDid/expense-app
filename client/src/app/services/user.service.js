@@ -20,6 +20,10 @@ const userService = {
             payload
         );
         return data;
+    },
+    removeUser: async (userId) => {
+        const { data } = await httpService.delete(userEndPoint + userId);
+        return data;
     }
 };
 export default userService;

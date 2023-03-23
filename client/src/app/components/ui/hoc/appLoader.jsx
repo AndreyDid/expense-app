@@ -21,7 +21,7 @@ const AppLoader = ({ children }) => {
         }
     }, [isLoggedIn]);
     if (!isLoggedIn) return <Login />;
-    if (usersStatusLoading) return <Loader/>;
+    if (usersStatusLoading) return <Loader />;
     return children;
 };
 AppLoader.propTypes = {

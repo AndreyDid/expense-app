@@ -2,21 +2,17 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { orderBy } from "lodash";
 import { getIncomesLoadingStatus } from "../../store/incomes";
+import { sumBalance } from "../../utils/sumBalance";
 import CardOperation from "../common/cardOperation";
 import Loader from "../common/loader";
-import useOperation from "../../hooks/useOperation";
+import PropTypes from "prop-types";
 
-const IncomesCard = () => {
-    const { incomes, userId } = useOperation();
-
+const IncomesCard = ({ incomes, userId }) => {
     const isLoading = useSelector(getIncomesLoadingStatus());
-
     const sortedIncomes = orderBy(incomes, ["created_at"], ["desc"]);
-    if (!isLoading) {
+    if (!isLoading && incomes) {
         const allIncomes = incomes.map((b) => b.sum);
-        const sumOfBalance = allIncomes.reduce((acc, curr) => {
-            return acc + curr;
-        }, 0);
+        const sumOfBalance = sumBalance(allIncomes);
         return (
             <CardOperation
                 label="Доход"
@@ -28,7 +24,11 @@ const IncomesCard = () => {
                 link="createIncome"
             />
         );
-    } else return <Loader/>;
+    } else return <Loader />;
+};
+IncomesCard.propTypes = {
+    incomes: PropTypes.array,
+    userId: PropTypes.string
 };
 
-export default IncomesCard;
+export default React.memo(IncomesCard);

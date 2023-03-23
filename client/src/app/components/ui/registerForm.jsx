@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import TextField from "../inputs/textField";
 import { signUp } from "../../store/user";
+import TextField from "../form/textField";
 import useForm from "../../hooks/useForm";
+import Button from "../common/button";
 
 const RegisterForm = () => {
     const [data, setData] = useState({
@@ -81,13 +82,16 @@ const RegisterForm = () => {
                 value={data.password}
                 error={errors.password}
             />
-            <button
-                type="submit"
-                disabled={!isValid}
-                className="btn btn-primary w-100 mx-auto"
-            >
-                Зарегистрироваться
-            </button>
+            <div className="container">
+                <Button
+                    label="Зарегистрироваться"
+                    rounded="rounded-1"
+                    color="primary"
+                    type="submit"
+                    disabled={!isValid}
+                    width="w-100"
+                />
+            </div>
         </form>
     );
 };

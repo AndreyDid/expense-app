@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import TextField from "../../inputs/textField";
 import { useSelector } from "react-redux";
 import { getCurrentUserId } from "../../../store/user";
 import { createExpenses } from "../../../store/expenses";
-import Button from "../../common/button";
 import { useHistory } from "react-router-dom";
+import { mathExpense } from "../../../utils/mathOperations";
 import {
     getCategoryExpenses,
     getCategoryExpensesLoadingStatus,
@@ -16,9 +15,13 @@ import {
     loadAccountList,
     updateAccount
 } from "../../../store/accounts";
-import SelectField from "../../inputs/selectField";
-import { mathExpense } from "../../../utils/mathOperations";
+import Button from "../../common/button";
+import TextField from "../../form/textField";
+import SelectField from "../../form/selectField";
 import useForm from "../../../hooks/useForm";
+import ContainerFormWrapper from "../../common/containerForm";
+import CardTitle from "../../common/typografy/cardTitle";
+import TextAreaField from "../../form/TextAreaField";
 
 const CreateExpenses = () => {
     const history = useHistory();
@@ -28,7 +31,6 @@ const CreateExpenses = () => {
         sum: ""
     });
     const userId = useSelector(getCurrentUserId());
-
     const category = useSelector(getCategoryExpenses());
     const categoryExpensesLoading = useSelector(
         getCategoryExpensesLoadingStatus()
@@ -86,68 +88,64 @@ const CreateExpenses = () => {
         }));
 
         return (
-            <div className="container mt-5">
+            <div>
                 {accountList.length > 0 ? (
-                    <div className="row">
-                        <div className="col-md-6 offset-md-3 shadow p-4">
-                            <h3 className="text-black-50">Расход:</h3>
-                            <form onSubmit={handleSubmit}>
-                                <SelectField
-                                    label="Со счёта:"
-                                    defaultOption="Выберите счет..."
-                                    name="account"
-                                    options={accountList}
-                                    onChange={handleChange}
-                                    value={data.account}
-                                    error={errors.account}
+                    <ContainerFormWrapper>
+                        <form onSubmit={handleSubmit}>
+                            <CardTitle>Расход:</CardTitle>
+                            <SelectField
+                                label="Со счёта:"
+                                defaultOption="Выберите счет..."
+                                name="account"
+                                options={accountList}
+                                onChange={handleChange}
+                                value={data.account}
+                                error={errors.account}
+                            />
+                            <SelectField
+                                label="На категорию:"
+                                defaultOption="Выберите категорию..."
+                                name="category"
+                                options={categoryList}
+                                onChange={handleChange}
+                                value={data.category}
+                                error={errors.category}
+                            />
+                            <TextField
+                                label="Сумма"
+                                name="sum"
+                                type="number"
+                                value={data.sum}
+                                error={errors.sum}
+                                onChange={handleChange}
+                            />
+                            <TextAreaField
+                                label="Комментарий"
+                                name="comment"
+                                type="text"
+                                value={data.comment || ""}
+                                onChange={handleChange}
+                            />
+                            <div className="d-flex justify-content-between">
+                                <Button
+                                    type="submit"
+                                    color="light"
+                                    disabled={!isValid}
+                                    icon={<i className="bi bi-check-lg"></i>}
+                                    rounded="rounded-1"
                                 />
-                                <SelectField
-                                    label="На категорию:"
-                                    defaultOption="Выберите категорию..."
-                                    name="category"
-                                    options={categoryList}
-                                    onChange={handleChange}
-                                    value={data.category}
-                                    error={errors.category}
+                                <Button
+                                    type="button"
+                                    color="light"
+                                    onClick={() => history.goBack()}
+                                    icon={<i className="bi bi-x-lg"></i>}
+                                    rounded="rounded-1"
                                 />
-                                <TextField
-                                    label="Сумма"
-                                    name="sum"
-                                    type="number"
-                                    value={data.sum}
-                                    error={errors.sum}
-                                    onChange={handleChange}
-                                />
-                                <TextField
-                                    label="Комментарий"
-                                    name="comment"
-                                    type="text"
-                                    value={data.comment}
-                                    onChange={handleChange}
-                                />
-                                <div className="d-flex justify-content-between">
-                                    <Button
-                                        type="submit"
-                                        color="light"
-                                        disabled={!isValid}
-                                        icon={
-                                            <i className="bi bi-check-lg"></i>
-                                        }
-                                        rounded="rounded-1"
-                                    />
-                                    <Button
-                                        type="button"
-                                        color="light"
-                                        onClick={() => history.goBack()}
-                                        icon={<i className="bi bi-x-lg"></i>}
-                                        rounded="rounded-1"
-                                    />
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                            </div>
+                        </form>
+                    </ContainerFormWrapper>
                 ) : (
-                    <div>
+                    <div className="mt-4">
                         <Button
                             onClick={() => history.goBack()}
                             shadow="shadow-sm"

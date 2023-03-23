@@ -1,22 +1,18 @@
 import React from "react";
+import PropTypes from "prop-types";
 import CardOperation from "../common/cardOperation";
 import Loader from "../common/loader";
-import useOperation from "../../hooks/useOperation";
 import { useSelector } from "react-redux";
 import { getIncomesLoadingStatus } from "../../store/incomes";
 import { getAccountLoadingStatus } from "../../store/accounts";
+import { sumBalance } from "../../utils/sumBalance";
 
-const AccountsCard = () => {
-    const { account, handleClick, userId } = useOperation();
-
+const AccountsCard = ({ account, handleClick, userId }) => {
     const isLoadingIncome = useSelector(getIncomesLoadingStatus());
     const isLoadingAccount = useSelector(getAccountLoadingStatus());
-
-    if (!isLoadingIncome && !isLoadingAccount) {
+    if (!isLoadingIncome && !isLoadingAccount && account) {
         const allAccounts = account.map((b) => b.sum);
-        const sumOfBalance = allAccounts.reduce((acc, curr) => {
-            return acc + Number(curr);
-        }, 0);
+        const sumOfBalance = sumBalance(allAccounts);
 
         return (
             <CardOperation
@@ -32,5 +28,10 @@ const AccountsCard = () => {
         );
     } else return <Loader />;
 };
+AccountsCard.propTypes = {
+    account: PropTypes.array,
+    handleClick: PropTypes.func,
+    userId: PropTypes.string
+};
 
-export default AccountsCard;
+export default React.memo(AccountsCard);

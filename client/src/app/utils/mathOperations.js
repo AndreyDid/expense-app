@@ -44,10 +44,23 @@ export function mathUpdateExpense(arr, arrAcc, data) {
     );
 }
 
-export function mathUpdateIncome(arr, arrAcc, data) {
+export function mathUpdateSumIncome(arr, arrAcc, data) {
     const increment = Number(arr.sum) - Number(data.sum);
     return arrAcc.map((a) => ({
         ...a,
         sum: Number(a.sum) - Number(increment)
+    }));
+}
+export function mathChangeSumAccount(thisAcc, data) {
+    return thisAcc.map((a) => ({
+        ...a,
+        sum: Number(a.sum) - Number(data.sum)
+    }));
+}
+
+export function mathUpdateSumChangeAccount(arrAcc, data) {
+    return arrAcc.map((a) => ({
+        ...a,
+        sum: Number(a.sum) + Number(data.sum)
     }));
 }

@@ -59,6 +59,11 @@ const userSlice = createSlice({
                 state.entities.findIndex((u) => u._id === action.payload._id)
             ] = action.payload;
         },
+        userRemove: (state, action) => {
+            state.entities = state.entities.filter(
+                (c) => c._id !== action.payload
+            );
+        },
         userLoggedOut: (state) => {
             state.entities = null;
             state.isLoggedIn = false;
@@ -79,12 +84,13 @@ const {
     authRequestSuccess,
     authRequestFailed,
     userLoggedOut,
-    userUpdate
+    userUpdate,
+    userRemove
 } = actions;
 
 const authRequested = createAction("users/authRequested");
 const userUpdateRequested = createAction("users/userUpdateRequested");
-const userUpdateFailed = createAction("users/userUpdateFailed");
+const userRemoveRequested = createAction("users/userRemoveRequested");
 
 export const logIn =
     ({ payload }) =>
@@ -141,7 +147,19 @@ export const updateUser = (payload) => async (dispatch) => {
         dispatch(userUpdate(content));
         history.push("/");
     } catch (error) {
-        dispatch(userUpdateFailed(error.message));
+        dispatch(usersRequestFailed(error.message));
+    }
+};
+
+export const removeUserProfile = (userId) => async (dispatch) => {
+    dispatch(userRemoveRequested());
+    try {
+        const { content } = await userService.removeUser(userId);
+        if (!content) {
+            dispatch(userRemove(userId));
+        }
+    } catch (error) {
+        dispatch(usersRequestFailed(error.message));
     }
 };
 

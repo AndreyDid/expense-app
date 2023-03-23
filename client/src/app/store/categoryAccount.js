@@ -54,6 +54,7 @@ const categoryAccountRemoveRequested = createAction(
 
 export const getCategoryAccount = () => (state) =>
     state.categoryAccounts.entities;
+
 export const getCategoryAccountLoadingStatus = () => (state) =>
     state.categoryAccounts.isLoading;
 

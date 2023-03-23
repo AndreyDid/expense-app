@@ -16,15 +16,19 @@ import {
     getCategoryAccountLoadingStatus
 } from "../../../store/categoryAccount";
 import {
+    mathChangeSumAccount,
     mathUpdateExpense,
-    mathUpdateIncome
+    mathUpdateSumIncome,
+    mathUpdateSumChangeAccount
 } from "../../../utils/mathOperations";
-import TextField from "../../inputs/textField";
+import TextField from "../../form/textField";
 import Button from "../../common/button";
-import SelectField from "../../inputs/selectField";
+import SelectField from "../../form/selectField";
 import useForm from "../../../hooks/useForm";
 import useOperation from "../../../hooks/useOperation";
 import Loader from "../../common/loader";
+import ContainerFormWrapper from "../../common/containerForm";
+import TextAreaField from "../../form/TextAreaField";
 
 const EditOperation = () => {
     const { expenses, incomes, account, params } = useOperation();
@@ -40,7 +44,6 @@ const EditOperation = () => {
             setIsLoading(false);
         }
     }, [data]);
-
     let allOperations = [];
     if (incomes && expenses) {
         allOperations = [...incomes, ...expenses];
@@ -88,7 +91,7 @@ const EditOperation = () => {
             !accountLoading &&
             !categoryAccountLoading
         ) {
-            setData((prevState) => ({ ...currentOperation }));
+            setData({ ...currentOperation });
         }
     }, [
         currentOperation,
@@ -103,6 +106,9 @@ const EditOperation = () => {
         const isValid = validate();
         if (!isValid) return;
         const findAccount = account.filter((a) => a._id === data.account);
+        const thisAccount = account.filter(
+            (a) => a._id === currentOperation.account
+        );
         if (data.type === "expense") {
             dispatch(updateExpense({ ...data }));
             dispatch(
@@ -112,11 +118,26 @@ const EditOperation = () => {
             );
         } else {
             dispatch(updateIncomes({ ...data }));
-            dispatch(
-                updateAccount(
-                    ...mathUpdateIncome(currentOperation, findAccount, data)
-                )
-            );
+            if (currentOperation.account !== data.account) {
+                dispatch(
+                    updateAccount(...mathChangeSumAccount(thisAccount, data))
+                );
+                dispatch(
+                    updateAccount(
+                        ...mathUpdateSumChangeAccount(findAccount, data)
+                    )
+                );
+            } else {
+                dispatch(
+                    updateAccount(
+                        ...mathUpdateSumIncome(
+                            currentOperation,
+                            findAccount,
+                            data
+                        )
+                    )
+                );
+            }
         }
     };
 
@@ -135,73 +156,67 @@ const EditOperation = () => {
         }));
 
         return (
-            <div className="container mt-5">
-                <div className="row">
-                    <div className="col-md-6 offset-md-3 shadow bg-light p-4 rounded-1">
-                        {!isLoading && allOperations.length > 0 ? (
-                            <form onSubmit={handleSubmit}>
-                                <SelectField
-                                    label="Со счёта:"
-                                    defaultOption="Выберите счет..."
-                                    name="account"
-                                    options={accountList}
-                                    onChange={handleChange}
-                                    value={data.account}
-                                    error={errors.account}
-                                />
-                                <SelectField
-                                    label="На категорию:"
-                                    defaultOption="Выберите категорию..."
-                                    name="category"
-                                    options={
-                                        data.type === "expense"
-                                            ? categoryExpensesList
-                                            : categoryAccountList
-                                    }
-                                    onChange={handleChange}
-                                    value={data.category}
-                                    error={errors.category}
-                                />
-                                <TextField
-                                    label="Сумма"
-                                    name="sum"
-                                    type="number"
-                                    value={data.sum}
-                                    error={errors.sum}
-                                    onChange={handleChange}
-                                />
-                                <TextField
-                                    label="Комментарий"
-                                    name="comment"
-                                    type="text"
-                                    value={data.comment}
-                                    onChange={handleChange}
-                                />
-                                <div className="d-flex justify-content-between">
-                                    <Button
-                                        type="submit"
-                                        disabled={!isValid}
-                                        color="light"
-                                        icon={
-                                            <i className="bi bi-check-lg"></i>
-                                        }
-                                        rounded="rounded-1"
-                                    />
-                                    <Button
-                                        type="button"
-                                        color="light"
-                                        onClick={() => history.goBack()}
-                                        icon={<i className="bi bi-x-lg"></i>}
-                                        rounded="rounded-1"
-                                    />
-                                </div>
-                            </form>
-                        ) : (
-                            <Loader/>
-                        )}
-                    </div>
-                </div>
-            </div>
+            <ContainerFormWrapper>
+                {!isLoading && allOperations.length > 0 ? (
+                    <form onSubmit={handleSubmit}>
+                        <SelectField
+                            label="Со счёта:"
+                            defaultOption="Выберите счет..."
+                            name="account"
+                            options={accountList}
+                            onChange={handleChange}
+                            value={data.account}
+                            error={errors.account}
+                        />
+                        <SelectField
+                            label="На категорию:"
+                            defaultOption="Выберите категорию..."
+                            name="category"
+                            options={
+                                data.type === "expense"
+                                    ? categoryExpensesList
+                                    : categoryAccountList
+                            }
+                            onChange={handleChange}
+                            value={data.category}
+                            error={errors.category}
+                        />
+                        <TextField
+                            label="Сумма"
+                            name="sum"
+                            type="number"
+                            value={data.sum}
+                            error={errors.sum}
+                            onChange={handleChange}
+                        />
+                        <TextAreaField
+                            label="Комментарий"
+                            name="comment"
+                            type="text"
+                            value={data.comment || ""}
+                            onChange={handleChange}
+                        />
+                        <div className="d-flex justify-content-between">
+                            <Button
+                                type="submit"
+                                disabled={!isValid}
+                                color="light"
+                                icon={<i className="bi bi-check-lg"></i>}
+                                rounded="rounded-1"
+                            />
+                            <Button
+                                type="button"
+                                color="light"
+                                onClick={() => history.goBack()}
+                                icon={<i className="bi bi-x-lg"></i>}
+                                rounded="rounded-1"
+                            />
+                        </div>
+                    </form>
+                ) : (
+                    <Loader />
+                )}
+            </ContainerFormWrapper>
         );
     }
 };

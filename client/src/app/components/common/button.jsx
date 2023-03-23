@@ -10,12 +10,14 @@ const Button = ({
     rounded,
     disabled,
     icon,
-    shadow
+    shadow,
+    border,
+    width
 }) => {
     return (
         <button
             type={type}
-            className={`btn btn-${color} ${size} ${rounded} ${shadow}`}
+            className={`m-0 btn btn-${color} ${size} ${rounded} ${shadow} ${border} ${width}`}
             onClick={onClick}
             disabled={disabled}
         >
@@ -50,7 +52,22 @@ Button.propTypes = {
         "dark",
         "link"
     ]),
-    rounded: PropTypes.oneOf(["rounded-0", "rounded-1", "rounded-pill"]),
+    border: PropTypes.oneOf([
+        "border",
+        "border-top",
+        "border-end",
+        "border-bottom",
+        "border-start"
+    ]),
+    width: PropTypes.oneOf(["w-auto", "w-25", "w-50", "w-75", "w-100"]),
+    rounded: PropTypes.oneOf([
+        "rounded-0",
+        "rounded-1",
+        "rounded-2",
+        "rounded-3",
+        "rounded-4",
+        "rounded-pill"
+    ]),
     label: PropTypes.string,
     onClick: PropTypes.func,
     disabled: PropTypes.bool,

@@ -22,14 +22,13 @@ const Category = ({ id, type }) => {
     const isLoadingExp = useSelector(getCategoryExpensesLoadingStatus());
     const catAcc = useSelector(getCategoryAccountById(id));
     const catExp = useSelector(getCategoryExpenseById(id));
-
     if (type === "income") {
         if (catAcc && !isLoadingAcc) {
-            return <p className="small m-0">{catAcc.name}</p>;
+            return <p className="m-0">{catAcc.name}</p>;
         } else return "Loading...";
     } else {
         if (catExp && !isLoadingExp) {
-            return <p className="small m-0">{catExp.name}</p>;
+            return <p className="m-0">{catExp.name}</p>;
         } else return "Loading...";
     }
 };
@@ -38,4 +37,4 @@ Category.propTypes = {
     type: PropTypes.string
 };
 
-export default Category;
+export default React.memo(Category);

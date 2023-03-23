@@ -11,27 +11,22 @@ import {
     mathDeleteExpense,
     mathDeleteIncome
 } from "../../../utils/mathOperations";
+import useOperation from "../../../hooks/useOperation";
 import Pagination from "../../common/pagination";
 import GroupList from "../../common/groupList";
-import _ from "lodash";
 import Button from "../../common/button";
+import Loader from "../../common/loader";
+import _ from "lodash";
 import Account from "../../account";
 import Category from "../../category";
-import useOperation from "../../../hooks/useOperation";
 import history from "../../../utils/history";
-import Loader from "../../common/loader";
 
 const OperationsListPage = () => {
-    const { incomes, expenses, account, dispatch } = useOperation();
+    const { incomes, expenses, account, dispatch, allOperations } =
+        useOperation();
 
     const catAccount = useSelector(getCategoryAccount());
     const catExpense = useSelector(getCategoryExpenses());
-
-    let allOperations = [];
-    if (incomes && expenses) {
-        allOperations = [...incomes, ...expenses];
-    }
-
     let allCategory = [];
     if (catAccount && catExpense) {
         allCategory = [...catAccount, ...catExpense];
@@ -111,152 +106,153 @@ const OperationsListPage = () => {
             history.push(history.location.pathname + `/${itemId}/edit`);
         };
         return (
-            <>
-                <div>
-                    <div className="d-flex mt-4 align-items-center">
-                        <h2 className="text-black-50 m-0 me-1">Фильтр:</h2>
-                        <div className="container p-0 fluid d-flex justify-content-between">
-                            <div className="d-flex">
-                                {account && (
-                                    <GroupList
-                                        label="Счет"
-                                        selectedItem={selectedAcc}
-                                        items={account}
-                                        onItemSelect={handleAccountSelect}
-                                    />
-                                )}
-                                {allCatList && (
-                                    <GroupList
-                                        label="Категории"
-                                        selectedItem={selectedCat}
-                                        items={allCatList}
-                                        onItemSelect={handleCategorySelect}
-                                    />
-                                )}
-                            </div>
-                            <div className="m-1">
-                                <Button
-                                    color="light"
-                                    shadow="shadow-sm"
-                                    onClick={() => {
-                                        clearFilter();
-                                    }}
-                                    rounded="rounded-1"
-                                    label="Очистить"
+            <div className="container">
+                <div className="text-black-50 mt-4 me-1">
+                    <h3>Фильтр:</h3>
+                </div>
+                <div className="d-flex mt-1 align-items-center">
+                    <div className=" p-0 container d-flex justify-content-between">
+                        <div className="d-flex">
+                            {account && (
+                                <GroupList
+                                    label="Счет"
+                                    selectedItem={selectedAcc}
+                                    items={account}
+                                    onItemSelect={handleAccountSelect}
                                 />
-                            </div>
+                            )}
+                            {allCatList && (
+                                <GroupList
+                                    label="Категории"
+                                    selectedItem={selectedCat}
+                                    items={allCatList}
+                                    onItemSelect={handleCategorySelect}
+                                />
+                            )}
+                        </div>
+                        <div className="m-1">
+                            <Button
+                                color="light"
+                                shadow="shadow-sm"
+                                onClick={() => {
+                                    clearFilter();
+                                }}
+                                rounded="rounded-1"
+                                label="Очистить"
+                            />
                         </div>
                     </div>
-                    <div>
-                        {operationCrop.length > 0 ? (
-                            <div>
-                                {count > 0 && (
-                                    <div className="container text-start mt-4">
-                                        <div className=" row row-cols-5">
-                                            <div className="col">Дата</div>
-                                            <div className="col">Счет</div>
-                                            <div className="col">Категория</div>
-                                            <div className="col">
-                                                Комментарий
-                                            </div>
-                                            <div className="col">Сумма</div>
-                                            {operationCrop.map((item) => (
-                                                <div
-                                                    key={item._id}
-                                                    className="m-0 p-0 col-12 d-flex position-relative"
-                                                >
+                </div>
+                <div>
+                    {operationCrop.length > 0 ? (
+                        <div>
+                            {count > 0 && (
+                                <div className="text-start mt-4">
+                                    <div>
+                                        {operationCrop.map((item) => (
+                                            <div
+                                                key={item._id}
+                                                className="d-flex position-relative"
+                                            >
+                                                <div className="mt-3 me-2 d-flex justify-content-end position-absolute top-0 end-0 ">
                                                     <button
                                                         onClick={() =>
-                                                            operationClick(
+                                                            handleClick(
                                                                 item._id
                                                             )
                                                         }
-                                                        className={`btn btn bg-${
-                                                            item.type ===
-                                                            "income"
-                                                                ? "success"
-                                                                : "danger"
+                                                        className="bi bi-pencil-square btn btn-sm btn-secondary mx-1"
+                                                    ></button>
+                                                    <button
+                                                        className="bi bi-trash2 btn btn-danger btn-sm mx-1"
+                                                        onClick={() =>
+                                                            handleDelete(
+                                                                item._id,
+                                                                item.type,
+                                                                item.account
+                                                            )
                                                         }
+                                                    ></button>
+                                                </div>
+                                                <button
+                                                    onClick={() =>
+                                                        operationClick(item._id)
+                                                    }
+                                                    className={`btn btn bg-${
+                                                        item.type === "income"
+                                                            ? "success"
+                                                            : "danger"
+                                                    }
                                                          m-0 my-1 p-0 py-2 align-items-center text-start bg-opacity-50 d-flex row w-100`}
-                                                    >
-                                                        <div className="col">
-                                                            {displayDate(
-                                                                item.created_at
-                                                            )}
+                                                >
+                                                    <div className="fs-4 fw-bold text-black-50">
+                                                        {displayDate(
+                                                            item.created_at
+                                                        )}
+                                                    </div>
+                                                    <div className="d-flex justify-content-between align-items-center">
+                                                        <div className="me-2">
+                                                            <div className="fw-semibold">
+                                                                {
+                                                                    <Category
+                                                                        id={
+                                                                            item.category
+                                                                        }
+                                                                        type={
+                                                                            item.type
+                                                                        }
+                                                                    />
+                                                                }
+                                                            </div>
+                                                            <div className="small">
+                                                                {
+                                                                    <Account
+                                                                        id={
+                                                                            item.account
+                                                                        }
+                                                                    />
+                                                                }
+                                                            </div>
                                                         </div>
-                                                        <div className="col">
-                                                            {
-                                                                <Account
-                                                                    id={
-                                                                        item.account
-                                                                    }
-                                                                />
-                                                            }
-                                                        </div>
-                                                        <div className="col">
-                                                            {
-                                                                <Category
-                                                                    id={
-                                                                        item.category
-                                                                    }
-                                                                    type={
-                                                                        item.type
-                                                                    }
-                                                                />
-                                                            }
-                                                        </div>
-                                                        <div className="col text-truncate">
+                                                        <div className="me-2 text-truncate">
                                                             {item.comment}
                                                         </div>
-                                                        <div className="col">
-                                                            {item.sum} р.
-                                                        </div>
-                                                    </button>
-                                                    <div className="col d-flex justify-content-end position-absolute top-50 end-0 translate-middle-y">
-                                                        <button
-                                                            onClick={() =>
-                                                                handleClick(
-                                                                    item._id
-                                                                )
-                                                            }
-                                                            className=" bi bi-pencil-square btn btn-sm btn-secondary mx-1"
-                                                        ></button>
-                                                        <button
-                                                            className=" bi bi-trash2 btn btn-danger btn-sm mx-1"
-                                                            onClick={() =>
-                                                                handleDelete(
-                                                                    item._id,
-                                                                    item.type,
-                                                                    item.account
-                                                                )
-                                                            }
-                                                        ></button>
+                                                        {item.type ===
+                                                        "income" ? (
+                                                            <div className="fs-4 fw-bold">
+                                                                +{item.sum}р.
+                                                            </div>
+                                                        ) : (
+                                                            <div className="fs-4 fw-bold">
+                                                                -{item.sum}p.
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                </div>
-                                            ))}
-                                        </div>
+                                                </button>
+                                            </div>
+                                        ))}
                                     </div>
-                                )}
-                            </div>
-                        ) : (
-                            <div className="d-flex justify-content-center mt-4 bg-light shadow-sm rounded-pill">
-                                <h1 className="text-black-50">Нет операций</h1>
-                            </div>
-                        )}
-                    </div>
-                    <div className="d-flex justify-content-center">
-                        <Pagination
-                            itemsCount={count}
-                            pageSize={pageSize}
-                            currentPage={currentPage}
-                            onPageChange={handlePageChange}
-                        />
-                    </div>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="d-flex justify-content-center mt-4 bg-light shadow-sm rounded-pill">
+                            <h1 className="text-black-50">Нет операций</h1>
+                        </div>
+                    )}
                 </div>
-            </>
+                <div className="d-flex justify-content-center mt-1">
+                    <Pagination
+                        itemsCount={count}
+                        pageSize={pageSize}
+                        currentPage={currentPage}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
+            </div>
         );
     }
-    return <Loader/>;
+    return <Loader />;
 };
 
-export default OperationsListPage;
+export default React.memo(OperationsListPage);

@@ -38,7 +38,7 @@ GroupList.propTypes = {
     items: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     label: PropTypes.string,
     onItemSelect: PropTypes.func,
-    selectedItem: PropTypes.object
+    selectedItem: PropTypes.string
 };
 
 export default GroupList;

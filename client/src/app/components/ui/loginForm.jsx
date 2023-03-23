@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import TextField from "../inputs/textField";
 import { getAuthErrors, logIn } from "../../store/user";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
+import TextField from "../form/textField";
 import useForm from "../../hooks/useForm";
+import Button from "../common/button";
 
 const LoginForm = () => {
     const history = useHistory();
@@ -58,13 +59,16 @@ const LoginForm = () => {
                 error={errors.password}
             />
             {loginError && <p className="text-danger">{loginError}</p>}
-            <button
-                type="submit"
-                disabled={!isValid}
-                className="btn btn-primary w-100 mx-auto"
-            >
-                Войти
-            </button>
+            <div className="container">
+                <Button
+                    label="Войти"
+                    rounded="rounded-1"
+                    color="primary"
+                    type="submit"
+                    disabled={!isValid}
+                    width="w-100"
+                />
+            </div>
         </form>
     );
 };

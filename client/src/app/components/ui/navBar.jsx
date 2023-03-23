@@ -8,7 +8,7 @@ const NavBar = () => {
     const isLoggedIn = useSelector(getIsLoggedIn());
     return (
         <div className="bg-light shadow-sm">
-            <div className="container d-flex justify-content-between align-items-center">
+            <div className="container d-flex justify-content-between align-items-center navbar-text">
                 <div>
                     {isLoggedIn && (
                         <ul className="nav ">
