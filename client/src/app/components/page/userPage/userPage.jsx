@@ -141,25 +141,30 @@ const UserPage = () => {
                     <ExpensesCard expenses={expenses} userId={userId} />
                 </div>
             </div>
-            {chartData && chartDataExp && Object.keys(colorIncome).length > 0 && Object.keys(colorExpense).length > 0 ? (
+            {chartData && chartDataExp && (
                 <div className="mt-4 position-relative">
-                    <Button
-                        label={showExpense ? "Расход" : "Доход"}
-                        shadow="shadow-sm"
-                        color="light"
-                        rounded="rounded-1"
-                        onClick={handleShow}
-                    />
-                    <DonutChartOperations
-                        showExpense={showExpense}
-                        chartData={chartData}
-                        chartDataExp={chartDataExp}
-                        colorIncome={colorIncome}
-                        colorExpense={colorExpense}
-                    />
+                    {Object.keys(colorIncome).length > 0 ||
+                    Object.keys(colorExpense).length > 0 ? (
+                        <div>
+                            <Button
+                                label={showExpense ? "Расход" : "Доход"}
+                                shadow="shadow-sm"
+                                color="light"
+                                rounded="rounded-1"
+                                onClick={handleShow}
+                            />
+                            <DonutChartOperations
+                                showExpense={showExpense}
+                                chartData={chartData}
+                                chartDataExp={chartDataExp}
+                                colorIncome={colorIncome}
+                                colorExpense={colorExpense}
+                            />
+                        </div>
+                    ) : (
+                        <Loader />
+                    )}
                 </div>
-            ) : (
-                <Loader />
             )}
         </div>
     );
