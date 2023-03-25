@@ -34,4 +34,4 @@ AccountsCard.propTypes = {
     userId: PropTypes.string
 };
 
-export default React.memo(AccountsCard);
+export default AccountsCard;

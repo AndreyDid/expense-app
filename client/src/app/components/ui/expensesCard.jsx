@@ -32,4 +32,4 @@ ExpensesCard.propTypes = {
     userId: PropTypes.string
 };
 
-export default React.memo(ExpensesCard);
+export default ExpensesCard;

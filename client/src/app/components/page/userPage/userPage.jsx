@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import useOperation from "../../../hooks/useOperation";
+import Button from "../../common/button";
 import IncomesCard from "../../ui/incomesCard";
 import AccountsCard from "../../ui/accountsCard";
 import ExpensesCard from "../../ui/expensesCard";
 import DonutChartOperations from "../../donutChartOperations";
-import Loader from "../../common/loader";
-import Button from "../../common/button";
 
 const UserPage = () => {
     const {
@@ -20,8 +19,8 @@ const UserPage = () => {
 
     const [showExpense, setShowExpense] = useState(false);
 
-    const [chartData, setChartData] = useState();
-    const [chartDataExp, setChartDataExp] = useState();
+    const [chartDataIncome, setChartDataIncome] = useState();
+    const [chartDataExpense, setChartDataExpense] = useState();
     const [colorIncome, setColorIncome] = useState();
     const [colorExpense, setColorExpense] = useState();
 
@@ -36,7 +35,6 @@ const UserPage = () => {
             return result;
         }
     }
-
     function findCatExpenseColor(expId) {
         if (catExpenses !== null) {
             const find = catExpenses.filter((i) => i._id === expId);
@@ -114,16 +112,15 @@ const UserPage = () => {
     if (expenses && incomes && catAccount && catExpenses !== null) {
         dataExpenses = transformExpense(expenses);
         dataIncomes = transformIncomes(incomes);
-        objColorIncome = colorListIncome(chartData);
-        objColorExpense = colorListExpense(chartDataExp);
+        objColorIncome = colorListIncome(dataIncomes);
+        objColorExpense = colorListExpense(dataExpenses);
     }
     useEffect(() => {
-        setChartData((prevState) => [...dataIncomes]);
-        setChartDataExp((prevState) => [...dataExpenses]);
-        setColorIncome((prevState) => ({ ...objColorIncome }));
-        setColorExpense((prevState) => ({ ...objColorExpense }));
+        setChartDataIncome([...dataIncomes]);
+        setChartDataExpense([...dataExpenses]);
+        setColorIncome({ ...objColorIncome });
+        setColorExpense({ ...objColorExpense });
     }, [incomes, expenses]);
-
     return (
         <div className="container">
             <div className="row gutters-sm justify-content-between">
@@ -141,10 +138,8 @@ const UserPage = () => {
                     <ExpensesCard expenses={expenses} userId={userId} />
                 </div>
             </div>
-            {chartData && chartDataExp && (
+            {chartDataIncome && chartDataExpense && colorIncome && colorExpense && (
                 <div className="mt-4 position-relative">
-                    {Object.keys(colorIncome).length > 0 ||
-                    Object.keys(colorExpense).length > 0 ? (
                         <div>
                             <Button
                                 label={showExpense ? "Расход" : "Доход"}
@@ -155,15 +150,12 @@ const UserPage = () => {
                             />
                             <DonutChartOperations
                                 showExpense={showExpense}
-                                chartData={chartData}
-                                chartDataExp={chartDataExp}
+                                chartData={chartDataIncome}
+                                chartDataExp={chartDataExpense}
                                 colorIncome={colorIncome}
                                 colorExpense={colorExpense}
                             />
                         </div>
-                    ) : (
-                        <Loader />
-                    )}
                 </div>
             )}
         </div>

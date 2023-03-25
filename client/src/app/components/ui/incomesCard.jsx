@@ -31,4 +31,4 @@ IncomesCard.propTypes = {
     userId: PropTypes.string
 };
 
-export default React.memo(IncomesCard);
+export default IncomesCard;
