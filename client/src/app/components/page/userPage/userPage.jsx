@@ -140,22 +140,22 @@ const UserPage = () => {
             </div>
             {chartDataIncome && chartDataExpense && colorIncome && colorExpense && (
                 <div className="mt-4 position-relative">
-                        <div>
-                            <Button
-                                label={showExpense ? "Расход" : "Доход"}
-                                shadow="shadow-sm"
-                                color="light"
-                                rounded="rounded-1"
-                                onClick={handleShow}
-                            />
-                            <DonutChartOperations
-                                showExpense={showExpense}
-                                chartData={chartDataIncome}
-                                chartDataExp={chartDataExpense}
-                                colorIncome={colorIncome}
-                                colorExpense={colorExpense}
-                            />
-                        </div>
+                    <div>
+                        <Button
+                            label={showExpense ? "Расход" : "Доход"}
+                            shadow="shadow-sm"
+                            color="light"
+                            rounded="rounded-1"
+                            onClick={handleShow}
+                        />
+                        <DonutChartOperations
+                            showExpense={showExpense}
+                            chartData={chartDataIncome}
+                            chartDataExp={chartDataExpense}
+                            colorIncome={colorIncome}
+                            colorExpense={colorExpense}
+                        />
+                    </div>
                 </div>
             )}
         </div>
