@@ -12,6 +12,9 @@ const LoginForm = () => {
         email: "",
         password: ""
     });
+    const testLogin = () => {
+        setData({ email: "test@mail.ru", password: "Test1234" });
+    };
     const loginError = useSelector(getAuthErrors());
 
     const validatorConfig = {
@@ -43,6 +46,15 @@ const LoginForm = () => {
     };
     return (
         <form onSubmit={handleSubmit}>
+            <div className="container text-end">
+                <Button
+                    label="Тестовый аккаунт"
+                    rounded="rounded-1"
+                    color="secondary"
+                    size="btn-sm"
+                    onClick={testLogin}
+                />
+            </div>
             <TextField
                 label="Электронная почта"
                 name="email"

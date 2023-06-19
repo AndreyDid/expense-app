@@ -17,7 +17,7 @@ const Button = ({
     return (
         <button
             type={type}
-            className={`m-0 btn btn-${color} ${size} ${rounded} ${shadow} ${border} ${width}`}
+            className={` btn btn-${color} ${size} ${rounded} ${shadow} ${border} ${width}`}
             onClick={onClick}
             disabled={disabled}
         >

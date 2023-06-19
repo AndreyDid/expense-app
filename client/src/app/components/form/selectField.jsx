@@ -47,6 +47,7 @@ const SelectField = ({
                 {type === "addDelete" && (
                     <div className="ms-1">
                         <Button
+                            type="button"
                             color="danger"
                             rounded="rounded-1"
                             icon={<i className="bi bi-trash-fill"></i>}
