@@ -28,6 +28,22 @@ const UserPage = () => {
         setShowExpense((prevState) => !prevState);
     }, [showExpense]);
 
+    function findDuplicates(arr) {
+        const result = {};
+        for (let i = 0; i < arr.length; i++) {
+            const obj = arr[i];
+            if (!result[obj.group]) {
+                result[obj.group] = {
+                    group: obj.group,
+                    value: 0,
+                    color: obj.color
+                };
+            }
+            result[obj.group].value += obj.value;
+        }
+        return Object.values(result);
+    }
+
     function findCatExpense(expId) {
         if (catExpenses !== null) {
             const find = catExpenses.filter((i) => i._id === expId);
@@ -49,7 +65,8 @@ const UserPage = () => {
             group: findCatAccount(i.category),
             color: findCatAccountColor(i.category)
         }));
-        return result;
+        const newResult = findDuplicates(result);
+        return newResult;
     }
 
     function findCatAccount(accId) {
@@ -74,7 +91,8 @@ const UserPage = () => {
             group: findCatExpense(i.category),
             color: findCatExpenseColor(i.category)
         }));
-        return result;
+        const newResult = findDuplicates(result);
+        return newResult;
     }
 
     function colorListIncome(data) {
@@ -151,7 +169,7 @@ const UserPage = () => {
                         <DonutChartOperations
                             showExpense={showExpense}
                             chartData={chartDataIncome}
-                            chartDataExp={chartDataExpense}
+                            chartDataExp={findDuplicates(chartDataExpense)}
                             colorIncome={colorIncome}
                             colorExpense={colorExpense}
                         />
